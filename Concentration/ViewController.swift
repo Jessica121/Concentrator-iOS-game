@@ -28,10 +28,7 @@ class ViewController: UIViewController {
 	@IBOutlet weak var EndLabel: UITextField!
 	
 	@IBAction func reloadGame(_ sender: UIButton) {
-		game = Concentration(numberOfPairs: (CardButtons.count) / 2)
-		emojiArr = emojiSet
-		emojiDict.removeAll()
-		flipCount = 0
+		self.reloadGame()
 		self.viewDidLoad()
 		self.viewWillAppear(true)
 	}
@@ -49,6 +46,15 @@ class ViewController: UIViewController {
 			button.isHidden = false
 		}
 		
+		self.setButtonStyle()
+		
+		flipCountLabel.isHidden = false
+		EndLabel.isHidden = true
+		reloadGameBtn.isHidden = true
+		updateViewFromModel()
+	}
+	
+	func setButtonStyle() {
 		for button in CardButtons {
 			button.layer.cornerRadius = 5
 			button.layer.borderWidth = 1
@@ -59,11 +65,6 @@ class ViewController: UIViewController {
 		reloadGameBtn.layer.cornerRadius = 5
 		reloadGameBtn.layer.borderWidth = 1
 		reloadGameBtn.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-		
-		flipCountLabel.isHidden = false
-		EndLabel.isHidden = true
-		reloadGameBtn.isHidden = true
-		updateViewFromModel()
 	}
 	
 	func updateViewFromModel() {
@@ -79,6 +80,10 @@ class ViewController: UIViewController {
 			}
 		}
 		
+		self.showCongratsScreenWhenGameFinished()
+	}
+	
+	func showCongratsScreenWhenGameFinished() {
 		if game.finishedMatching() {
 			for button in CardButtons {
 				button.isHidden = true
@@ -95,6 +100,13 @@ class ViewController: UIViewController {
 			emojiDict[card.identifier] = emojiArr.remove(at: index)
 		}
 		return (emojiDict[card.identifier]) ?? "?"		// return value, if nil, return ?
+	}
+	
+	func reloadGame() {
+		game = Concentration(numberOfPairs: (CardButtons.count) / 2)
+		emojiArr = emojiSet
+		emojiDict.removeAll()
+		flipCount = 0
 	}
 
 }
